@@ -20,7 +20,7 @@ type TextEditor struct {
 	// The preferred column that the cursor will try to navigate to when the up/down navigations are used.
 	cursorPreferredColumn int
 
-	wrappedLinesCache []paragraph
+	wrappedLinesCache [][]paragraph
 }
 
 // NewEditor create a new empty text editor.
@@ -34,4 +34,9 @@ func NewEditor() *TextEditor {
 		cursorPos:             0,
 		cursorPreferredColumn: 0,
 	}
+}
+
+func (t *TextEditor) SetWidth(newWidth int) {
+	t.width = newWidth
+	t.wrappedLinesCache = nil
 }

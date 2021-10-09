@@ -103,16 +103,21 @@ func TestBackspace(t *testing.T) {
 	editor.Backspace()
 
 	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("fou")}, editor.paragraphs)
+	assert.Equal(t, 3, editor.cursorPos)
+	assert.Equal(t, 3, editor.cursorPreferredColumn)
 
 	editor.LeftNum(3)
 	editor.Backspace()
 
 	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("fou")}, editor.paragraphs)
+	assert.Equal(t, 0, editor.cursorPos)
 
 	editor.RightNum(2)
 	editor.Backspace()
 
 	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("fu")}, editor.paragraphs)
+	assert.Equal(t, 1, editor.cursorPos)
+	assert.Equal(t, 1, editor.cursorPreferredColumn)
 }
 
 func TestBackspace_MultipleParagraphs(t *testing.T) {
@@ -124,11 +129,15 @@ func TestBackspace_MultipleParagraphs(t *testing.T) {
 
 	expected := []paragraph{splitGraphemeClusters("Hello"), splitGraphemeClusters("World")}
 	assertParagraphsEqual(t, expected, editor.paragraphs)
+	assert.Equal(t, 5, editor.cursorPos)
+	assert.Equal(t, 5, editor.cursorPreferredColumn)
 
 	editor.LeftNum(5)
 	editor.Backspace()
 
 	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("HelloWorld")}, editor.paragraphs)
+	assert.Equal(t, 5, editor.cursorPos)
+	assert.Equal(t, 5, editor.cursorPreferredColumn)
 }
 
 func TestBackspace_MultipleParagraphs2(t *testing.T) {
@@ -142,4 +151,14 @@ func TestBackspace_MultipleParagraphs2(t *testing.T) {
 
 	expected := []paragraph{splitGraphemeClusters("HelloWorld"), splitGraphemeClusters("End")}
 	assertParagraphsEqual(t, expected, editor.paragraphs)
+}
+
+func TestString(t *testing.T) {
+	editor := NewEditor()
+
+	editor.Write("Hello\n")
+	editor.Write("World!\n")
+	editor.Write("\n")
+
+	assert.Equal(t, "Hello\nWorld!\n", editor.String())
 }
