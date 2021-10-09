@@ -50,6 +50,8 @@ func main() {
 			case keyboard.KeyBackspace2: editor.Backspace()
 			case keyboard.KeyEnter: editor.Newline()
 			case keyboard.KeySpace: editor.Write(" ")
+			case keyboard.KeyHome: editor.Home()
+			case keyboard.KeyEnd: editor.End()
 			}
 		}
 	}
