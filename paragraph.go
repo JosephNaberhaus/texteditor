@@ -62,6 +62,10 @@ func (t *TextEditor) setParagraphs(paras []paragraph) {
 	t.wrappedLinesCache = nil
 }
 
+func (t *TextEditor) Empty() bool {
+	return len(t.paragraphs) == 1 && len(t.paragraphs[0]) == 0
+}
+
 func (t *TextEditor) Write(text string) {
 	clusters := splitGraphemeClusters(text)
 	for _, cluster := range clusters {

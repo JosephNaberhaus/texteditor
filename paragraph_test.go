@@ -24,6 +24,18 @@ func TestParagraph_Equal(t *testing.T) {
 	assert.False(t, p1.Equal(p4))
 }
 
+func TestTextEditor_Empty(t *testing.T) {
+	editor := NewEditor()
+
+	assert.True(t, editor.Empty())
+
+	editor.Write("1")
+	assert.False(t, editor.Empty())
+
+	editor.Backspace()
+	assert.True(t, editor.Empty())
+}
+
 func TestTextEditor_Write(t *testing.T) {
 	twenty := "20-grapheme-clusters"
 
