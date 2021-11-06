@@ -66,9 +66,6 @@ func TestTextEditor_CursorColumn(t *testing.T) {
 	editor.Write("four")
 	assert.Equal(t, 2, editor.CursorColumn())
 
-	editor.SetWidth(100)
-	assert.Equal(t, 12, editor.CursorColumn())
-
 	editor.Newline()
 	assert.Zero(t, editor.CursorColumn())
 }

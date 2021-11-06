@@ -10,6 +10,7 @@ import (
 
 func main() {
 	editor := go_text_editor.NewEditor()
+	editor.SetFirstLineIndent(4)
 	editor.SetWidth(20)
 
 	err := keyboard.Open()
@@ -28,6 +29,7 @@ func main() {
 		fmt.Printf(cursor.ClearEntireScreen())
 		fmt.Printf(cursor.MoveTo(0, 0))
 		fmt.Printf("Press ESC to exit...\n")
+		fmt.Printf(cursor.MoveRight(4))
 		fmt.Printf(editor.String())
 		fmt.Printf(cursor.MoveTo(editor.CursorRow()+2, editor.CursorColumn()+1))
 

@@ -29,15 +29,21 @@ func (p paragraph) Equal(p2 paragraph) bool {
 	return true
 }
 
-func (p paragraph) Wrap(width int) []paragraph {
+func (p paragraph) Wrap(width, firstLineIndent int) []paragraph {
 	if len(p) == 0 {
 		return []paragraph{{}}
 	}
 
-	wrapped := make([]paragraph, 0, (len(p) / width) + 1)
+	wrapped := make([]paragraph, 0, (len(p)/width)+1)
 	for i := 0; i < len(p); i += width {
-		line := p[i:min(i + width, len(p))]
-		wrapped = append(wrapped, line)
+		if i == 0 {
+			wrapped = append(wrapped, p[0:min(i+width-firstLineIndent, len(p))])
+			// Offset i so that the next iteration starts at the right index
+			i -= firstLineIndent
+		} else {
+			wrapped = append(wrapped, p[i:min(i+width, len(p))])
+		}
+
 	}
 	return wrapped
 }
@@ -72,9 +78,9 @@ func (t *TextEditor) writeCluster(cluster graphemeCluster) {
 		if t.CursorIsAtEndOfParagraph() {
 			t.setParagraph(t.cursorParagraph, append(t.paragraphs[t.cursorParagraph], cluster))
 		} else {
-			left := t.CurParagraph()[:t.cursorPos]
+			left := t.CurParagraph()[:t.CursorIndex()]
 			middle := paragraph{cluster}
-			right := t.CurParagraph()[t.cursorPos:]
+			right := t.CurParagraph()[t.CursorIndex():]
 			t.setParagraph(t.cursorParagraph, append(left, append(middle, right...)...))
 		}
 
@@ -108,10 +114,10 @@ func (t *TextEditor) Backspace() {
 		t.setParagraph(t.cursorParagraph, append(t.paragraphs[t.cursorParagraph], curParagraph...))
 	} else {
 		if t.CursorIsAtEndOfParagraph() {
-			t.setParagraph(t.cursorParagraph, t.CurParagraph()[:t.cursorPos-1])
+			t.setParagraph(t.cursorParagraph, t.CurParagraph()[:t.CursorIndex()-1])
 		} else {
-			left := t.CurParagraph()[:t.cursorPos-1]
-			right := t.CurParagraph()[t.cursorPos:]
+			left := t.CurParagraph()[:t.CursorIndex()-1]
+			right := t.CurParagraph()[t.CursorIndex():]
 			t.setParagraph(t.cursorParagraph, append(left, right...))
 		}
 
@@ -123,10 +129,10 @@ func (t *TextEditor) Backspace() {
 
 func (t *TextEditor) Newline() {
 	// Text to the left of the cursor will remain. Text to the right of the paragraph will be moved to the new one
-	left := t.CurParagraph()[:t.cursorPos]
-	right := t.CurParagraph()[t.cursorPos:]
+	left := t.CurParagraph()[:t.CursorIndex()]
+	right := t.CurParagraph()[t.CursorIndex():]
 
-	if t.cursorParagraph == len(t.paragraphs) - 1 {
+	if t.cursorParagraph == len(t.paragraphs)-1 {
 		t.setParagraphs(append(t.paragraphs, make([]graphemeCluster, 0)))
 	} else {
 		before := t.paragraphs[:t.cursorParagraph]
@@ -136,7 +142,7 @@ func (t *TextEditor) Newline() {
 	}
 
 	t.setParagraph(t.cursorParagraph, left)
-	t.setParagraph(t.cursorParagraph + 1, append(t.paragraphs[t.cursorParagraph + 1], right...))
+	t.setParagraph(t.cursorParagraph+1, append(t.paragraphs[t.cursorParagraph+1], right...))
 
 	t.cursorParagraph++
 	t.cursorPos = 0
@@ -154,7 +160,11 @@ func (t *TextEditor) wrapParagraphs() {
 		}
 
 		if t.wrappedLinesCache[i] == nil {
-			t.wrappedLinesCache[i] = para.Wrap(t.width)
+			if i == 0 {
+				t.wrappedLinesCache[i] = para.Wrap(t.width, t.firstLineIndent)
+			} else {
+				t.wrappedLinesCache[i] = para.Wrap(t.width, 0)
+			}
 		}
 	}
 }

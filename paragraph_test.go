@@ -24,7 +24,7 @@ func TestParagraph_Equal(t *testing.T) {
 	assert.False(t, p1.Equal(p4))
 }
 
-func TestWrite(t *testing.T) {
+func TestTextEditor_Write(t *testing.T) {
 	twenty := "20-grapheme-clusters"
 
 	editor := NewEditor()
@@ -50,7 +50,7 @@ func TestWrite(t *testing.T) {
 	assert.Equal(t, 1, editor.cursorPreferredColumn)
 }
 
-func TestWrite_MidParagraph(t *testing.T) {
+func TestTextEditor_Write_MidParagraph(t *testing.T) {
 	editor := NewEditor()
 
 	editor.Write("Hello World!")
@@ -69,7 +69,7 @@ func TestWrite_MidParagraph(t *testing.T) {
 	assert.Equal(t, editor.cursorPreferredColumn, 1)
 }
 
-func TestWrite_Newline(t *testing.T) {
+func TestTextEditor_Write_Newline(t *testing.T) {
 	editor := NewEditor()
 
 	editor.Write("\n")
@@ -96,7 +96,7 @@ func TestWrite_Newline(t *testing.T) {
 	assertParagraphsEqual(t, expected, editor.paragraphs)
 }
 
-func TestWriteRegroups(t *testing.T) {
+func TestTextEditor_Write_Regroups(t *testing.T) {
 	editor := NewEditor()
 
 	editor.Write("👨")
@@ -112,7 +112,7 @@ func TestWriteRegroups(t *testing.T) {
 	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("👨‍👩‍👦")}, editor.paragraphs)
 }
 
-func TestBackspace(t *testing.T) {
+func TestTextEditor_Backspace(t *testing.T) {
 	editor := NewEditor()
 
 	editor.Write("four")
@@ -136,7 +136,7 @@ func TestBackspace(t *testing.T) {
 	assert.Equal(t, 1, editor.cursorPreferredColumn)
 }
 
-func TestBackspace_MultipleParagraphs(t *testing.T) {
+func TestTextEditor_Backspace_MultipleParagraphs(t *testing.T) {
 	editor := NewEditor()
 
 	editor.Write("Hello\n")
@@ -156,7 +156,7 @@ func TestBackspace_MultipleParagraphs(t *testing.T) {
 	assert.Equal(t, 5, editor.cursorPreferredColumn)
 }
 
-func TestBackspace_MultipleParagraphs2(t *testing.T) {
+func TestTextEditor_Backspace_MultipleParagraphs2(t *testing.T) {
 	editor := NewEditor()
 
 	editor.Write("Hello\n")
@@ -169,7 +169,15 @@ func TestBackspace_MultipleParagraphs2(t *testing.T) {
 	assertParagraphsEqual(t, expected, editor.paragraphs)
 }
 
-func TestString(t *testing.T) {
+func TestTextEditor_Backspace_FirstLineIndent(t *testing.T) {
+	editor := NewEditor()
+	editor.SetFirstLineIndent(5)
+
+	editor.Backspace()
+	assert.Equal(t, 5, editor.cursorPos)
+}
+
+func TestTextEditor_String(t *testing.T) {
 	editor := NewEditor()
 
 	editor.Write("Hello\n")

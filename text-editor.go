@@ -5,6 +5,9 @@ const (
 )
 
 type TextEditor struct {
+	// The number of characters to indent the first line
+	firstLineIndent int
+
 	// The number of grapheme clusters that can be placed on one line
 	width int
 
@@ -26,17 +29,27 @@ type TextEditor struct {
 // NewEditor create a new empty text editor.
 func NewEditor() *TextEditor {
 	return &TextEditor{
-		width:                 DefaultWidth,
-		paragraphs:            []paragraph{
+		width: DefaultWidth,
+		paragraphs: []paragraph{
 			make([]graphemeCluster, 0),
 		},
-		cursorParagraph:       0,
-		cursorPos:             0,
-		cursorPreferredColumn: 0,
 	}
+}
+
+func (t *TextEditor) SetFirstLineIndent(newFirstLineIndent int) {
+	t.firstLineIndent = newFirstLineIndent
+	if t.cursorParagraph == 0 {
+		t.cursorPos = newFirstLineIndent
+	} else {
+		t.cursorPos = 0
+	}
+	t.cursorPreferredColumn = 0
+	t.wrappedLinesCache = nil
 }
 
 func (t *TextEditor) SetWidth(newWidth int) {
 	t.width = newWidth
+	t.cursorPos = t.minCursorPos()
+	t.cursorPreferredColumn = 0
 	t.wrappedLinesCache = nil
 }

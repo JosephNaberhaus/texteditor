@@ -16,6 +16,10 @@ func (t *TextEditor) CursorIsOnLastParagraph() bool {
 	return t.cursorParagraph == (len(t.paragraphs) - 1)
 }
 
+func (t *TextEditor) CursorIndex() int {
+	return t.cursorPos - t.minCursorPos()
+}
+
 func (t *TextEditor) CursorColumn() int {
 	return t.cursorPos % t.width
 }
@@ -32,7 +36,7 @@ func (t *TextEditor) CursorRow() int {
 }
 
 func (t *TextEditor) CursorIsAtStartOfParagraph() bool {
-	return t.cursorPos == 0
+	return t.cursorPos == t.minCursorPos()
 }
 
 func (t *TextEditor) CursorIsAtEndOfParagraph() bool {
@@ -42,9 +46,9 @@ func (t *TextEditor) CursorIsAtEndOfParagraph() bool {
 func (t *TextEditor) Left() {
 	t.cursorPos--
 
-	if t.cursorPos < 0 {
+	if t.cursorPos < t.minCursorPos() {
 		if t.CursorIsOnFirstParagraph() {
-			t.cursorPos = 0
+			t.cursorPos = t.minCursorPos()
 		} else {
 			t.cursorParagraph--
 			t.cursorPos = t.CurParagraphLength()
@@ -61,12 +65,12 @@ func (t *TextEditor) LeftNum(n int) {
 func (t *TextEditor) Right() {
 	t.cursorPos++
 
-	if t.cursorPos > t.CurParagraphLength() {
+	if t.cursorPos > (t.CurParagraphLength() + t.minCursorPos()) {
 		if t.CursorIsOnLastParagraph() {
-			t.cursorPos = t.CurParagraphLength()
+			t.cursorPos = t.CurParagraphLength() + t.minCursorPos()
 		} else {
 			t.cursorParagraph++
-			t.cursorPos = 0
+			t.cursorPos = t.minCursorPos()
 		}
 	}
 
@@ -80,12 +84,19 @@ func (t *TextEditor) RightNum(n int) {
 func (t *TextEditor) Up() {
 	if t.cursorPos >= t.width {
 		t.cursorPos -= (t.CursorColumn() - t.cursorPreferredColumn) + t.width
+		t.cursorPos = max(t.minCursorPos(), t.cursorPos)
 	} else {
 		if !t.CursorIsOnFirstParagraph() {
 			t.cursorParagraph--
 
 			lineOffset := t.CurParagraphLength() / t.width
-			t.cursorPos = min(t.CurParagraphLength(), (lineOffset * t.width) + t.cursorPreferredColumn)
+			t.cursorPos = max(
+				t.minCursorPos(),
+				min(
+					t.CurParagraphLength(),
+					(lineOffset*t.width)+t.cursorPreferredColumn,
+				),
+			)
 		}
 	}
 }
@@ -97,7 +108,7 @@ func (t *TextEditor) UpNum(n int) {
 func (t *TextEditor) Down() {
 	lineOffset := t.CurParagraphLength() / t.width
 	if t.cursorPos < (lineOffset * t.width) {
-		t.cursorPos = min(t.cursorPos + t.width, t.CurParagraphLength())
+		t.cursorPos = min(t.cursorPos+t.width, t.CurParagraphLength())
 	} else {
 		if !t.CursorIsOnLastParagraph() {
 			t.cursorParagraph++
@@ -111,11 +122,23 @@ func (t *TextEditor) DownNum(n int) {
 }
 
 func (t *TextEditor) Home() {
-	t.cursorPos = 0
-	t.cursorPreferredColumn = 0
+	t.cursorPos = t.minCursorPos()
+	t.setPreferredColumn()
 }
 
 func (t *TextEditor) End() {
-	t.cursorPos = t.CurParagraphLength()
-	t.cursorPreferredColumn = t.CursorColumn()
+	t.cursorPos = t.CurParagraphLength() + t.minCursorPos()
+	t.setPreferredColumn()
+}
+
+func (t *TextEditor) setPreferredColumn() {
+	t.cursorPreferredColumn = t.cursorPos
+}
+
+func (t *TextEditor) minCursorPos() int {
+	if t.cursorParagraph == 0 {
+		return t.firstLineIndent
+	}
+
+	return 0
 }
