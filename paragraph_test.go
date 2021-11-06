@@ -96,6 +96,22 @@ func TestWrite_Newline(t *testing.T) {
 	assertParagraphsEqual(t, expected, editor.paragraphs)
 }
 
+func TestWriteRegroups(t *testing.T) {
+	editor := NewEditor()
+
+	editor.Write("👨")
+	assert.Equal(t, 1, len(editor.paragraphs[0]))
+	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("👨")}, editor.paragraphs)
+
+	editor.Write("\u200d👩")
+	assert.Equal(t, 1, len(editor.paragraphs[0]))
+	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("👨‍👩")}, editor.paragraphs)
+
+	editor.Write("\u200d👦")
+	assert.Equal(t, 1, len(editor.paragraphs[0]))
+	assertParagraphsEqual(t, []paragraph{splitGraphemeClusters("👨‍👩‍👦")}, editor.paragraphs)
+}
+
 func TestBackspace(t *testing.T) {
 	editor := NewEditor()
 
@@ -159,6 +175,8 @@ func TestString(t *testing.T) {
 	editor.Write("Hello\n")
 	editor.Write("World!\n")
 	editor.Write("\n")
+	assert.Equal(t, "Hello\nWorld!\n\n", editor.String())
 
-	assert.Equal(t, "Hello\nWorld!\n", editor.String())
+	editor.SetWidth(3)
+	assert.Equal(t, "Hel\nlo\nWor\nld!\n\n", editor.String())
 }

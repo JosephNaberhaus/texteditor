@@ -17,7 +17,7 @@ func main() {
 		fmt.Printf("Error starting keyboard listener")
 		os.Exit(2)
 	}
-	defer func () {
+	defer func() {
 		err := keyboard.Close()
 		if err != nil {
 			fmt.Printf("Error closing keyboard listener")
@@ -29,7 +29,7 @@ func main() {
 		fmt.Printf(cursor.MoveTo(0, 0))
 		fmt.Printf("Press ESC to exit...\n")
 		fmt.Printf(editor.String())
-		fmt.Printf(cursor.MoveTo(editor.CursorRow() + 2, editor.CursorColumn() + 1))
+		fmt.Printf(cursor.MoveTo(editor.CursorRow()+2, editor.CursorColumn()+1))
 
 		char, key, err := keyboard.GetKey()
 		if err != nil {
@@ -41,17 +41,28 @@ func main() {
 			editor.Write(string(char))
 		} else {
 			switch key {
-			case keyboard.KeyEsc: return
-			case keyboard.KeyArrowLeft: editor.Left()
-			case keyboard.KeyArrowRight: editor.Right()
-			case keyboard.KeyArrowUp: editor.Up()
-			case keyboard.KeyArrowDown: editor.Down()
-			case keyboard.KeyBackspace: fallthrough
-			case keyboard.KeyBackspace2: editor.Backspace()
-			case keyboard.KeyEnter: editor.Newline()
-			case keyboard.KeySpace: editor.Write(" ")
-			case keyboard.KeyHome: editor.Home()
-			case keyboard.KeyEnd: editor.End()
+			case keyboard.KeyEsc:
+				return
+			case keyboard.KeyArrowLeft:
+				editor.Left()
+			case keyboard.KeyArrowRight:
+				editor.Right()
+			case keyboard.KeyArrowUp:
+				editor.Up()
+			case keyboard.KeyArrowDown:
+				editor.Down()
+			case keyboard.KeyBackspace:
+				fallthrough
+			case keyboard.KeyBackspace2:
+				editor.Backspace()
+			case keyboard.KeyEnter:
+				editor.Newline()
+			case keyboard.KeySpace:
+				editor.Write(" ")
+			case keyboard.KeyHome:
+				editor.Home()
+			case keyboard.KeyEnd:
+				editor.End()
 			}
 		}
 	}

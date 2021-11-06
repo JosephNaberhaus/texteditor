@@ -42,6 +42,8 @@ func (p paragraph) Wrap(width int) []paragraph {
 	return wrapped
 }
 
+// setParagraph updates the ith paragraph. It must be used rather than interacting with the paragraphs slice directly
+// in order to properly invalidate the wrappedLinesCache
 func (t *TextEditor) setParagraph(i int, para paragraph) {
 	t.paragraphs[i] = para
 	if i < len(t.wrappedLinesCache) {
@@ -75,6 +77,9 @@ func (t *TextEditor) writeCluster(cluster graphemeCluster) {
 			right := t.CurParagraph()[t.cursorPos:]
 			t.setParagraph(t.cursorParagraph, append(left, append(middle, right...)...))
 		}
+
+		// Now that the grapheme cluster has been inserted it might have changed the grouping of grapheme clusters.
+		t.setParagraph(t.cursorParagraph, splitGraphemeClusters(t.CurParagraph().String()))
 
 		t.Right()
 	}
