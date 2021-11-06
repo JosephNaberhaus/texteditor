@@ -1,4 +1,4 @@
-package go_text_editor
+package editor
 
 const (
 	DefaultWidth = 80

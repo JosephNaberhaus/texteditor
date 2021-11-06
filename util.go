@@ -1,4 +1,4 @@
-package go_text_editor
+package editor
 
 func min(a, b int) int {
 	if a < b {

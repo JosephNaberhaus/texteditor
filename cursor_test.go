@@ -1,4 +1,4 @@
-package go_text_editor
+package editor
 
 import (
 	"github.com/stretchr/testify/assert"

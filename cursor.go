@@ -1,4 +1,4 @@
-package go_text_editor
+package editor
 
 func (t *TextEditor) CurParagraph() paragraph {
 	return t.paragraphs[t.cursorParagraph]
