@@ -38,11 +38,7 @@ func NewEditor() *TextEditor {
 
 func (t *TextEditor) SetFirstLineIndent(newFirstLineIndent int) {
 	t.firstLineIndent = newFirstLineIndent
-	if t.cursorParagraph == 0 {
-		t.cursorPos = newFirstLineIndent
-	} else {
-		t.cursorPos = 0
-	}
+	t.cursorPos = t.minCursorPos()
 	t.cursorPreferredColumn = 0
 	t.wrappedLinesCache = nil
 }

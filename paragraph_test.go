@@ -188,3 +188,12 @@ func TestTextEditor_String(t *testing.T) {
 	editor.SetWidth(3)
 	assert.Equal(t, "Hel\nlo\nWor\nld!\n\n", editor.String())
 }
+
+func TestTextEditor_String_FirstLineIndent(t *testing.T) {
+	editor := NewEditor()
+	editor.SetFirstLineIndent(10)
+	editor.SetWidth(14)
+
+	editor.Write("fourfour")
+	assert.Equal(t, "four\nfour", editor.String())
+}

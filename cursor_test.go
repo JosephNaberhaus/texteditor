@@ -145,6 +145,14 @@ func TestTextEditor_Left(t *testing.T) {
 	assert.Equal(t, 3, editor.cursorPos)
 }
 
+func TestTextEditor_Left_FirstLineIndent(t *testing.T) {
+	editor := NewEditor()
+	editor.SetFirstLineIndent(5)
+
+	editor.Left()
+	assert.Equal(t, 5, editor.cursorPos)
+}
+
 func TestTextEditor_LeftNum(t *testing.T) {
 	editor := NewEditor()
 
@@ -205,6 +213,16 @@ func TestTextEditor_Up(t *testing.T) {
 	editor.Up()
 	assert.Zero(t, editor.cursorParagraph)
 	assert.Equal(t, 8, editor.cursorPos)
+}
+
+func TestTextEditor_Up_FirstLineIndent(t *testing.T) {
+	editor := NewEditor()
+	editor.SetFirstLineIndent(4)
+
+	editor.Newline()
+	editor.Up()
+
+	assert.Equal(t, 4, editor.cursorPos)
 }
 
 func TestTextEditor_Up_LongParagraph(t *testing.T) {
