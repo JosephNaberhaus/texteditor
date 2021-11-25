@@ -48,6 +48,23 @@ func (p paragraph) Wrap(width, firstLineIndent int) []paragraph {
 	return wrapped
 }
 
+func (t *TextEditor) IsEmpty() bool {
+	return len(t.paragraphs) == 1 && len(t.paragraphs[0]) == 0
+}
+
+func (t *TextEditor) NumGraphemes() int {
+	num := 0
+	for _, p := range t.paragraphs {
+		num += len(p)
+	}
+
+	return num
+}
+
+func (t *TextEditor) NumParagraphs() int {
+	return len(t.paragraphs)
+}
+
 // setParagraph updates the ith paragraph. It must be used rather than interacting with the paragraphs slice directly
 // in order to properly invalidate the wrappedLinesCache
 func (t *TextEditor) setParagraph(i int, para paragraph) {

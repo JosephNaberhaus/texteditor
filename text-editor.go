@@ -37,6 +37,10 @@ func NewEditor() *TextEditor {
 }
 
 func (t *TextEditor) SetFirstLineIndent(newFirstLineIndent int) {
+	if newFirstLineIndent == t.firstLineIndent {
+		return
+	}
+
 	t.firstLineIndent = newFirstLineIndent
 	t.cursorPos = t.minCursorPos()
 	t.cursorPreferredColumn = 0
@@ -44,6 +48,10 @@ func (t *TextEditor) SetFirstLineIndent(newFirstLineIndent int) {
 }
 
 func (t *TextEditor) SetWidth(newWidth int) {
+	if newWidth == t.width {
+		return
+	}
+
 	t.width = newWidth
 	t.cursorPos = t.minCursorPos()
 	t.cursorPreferredColumn = 0
