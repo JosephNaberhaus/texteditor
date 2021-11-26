@@ -129,7 +129,7 @@ func (t *TextEditor) Backspace() {
 		}
 		t.cursorParagraph--
 
-		t.cursorPos = t.CurParagraphLength()
+		t.cursorPos = t.CurParagraphLength() + t.minCursorPos()
 		t.setPreferredColumn()
 
 		t.setParagraph(t.cursorParagraph, append(t.paragraphs[t.cursorParagraph], curParagraph...))

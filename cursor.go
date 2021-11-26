@@ -93,7 +93,7 @@ func (t *TextEditor) Up() {
 			t.cursorPos = max(
 				t.minCursorPos(),
 				min(
-					t.CurParagraphLength(),
+					t.CurParagraphLength() + t.minCursorPos(),
 					(lineOffset*t.width)+t.cursorPreferredColumn,
 				),
 			)
