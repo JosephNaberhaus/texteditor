@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/JosephNaberhaus/go-text-editor"
+	editor "github.com/JosephNaberhaus/go-text-editor"
 	"github.com/ahmetb/go-cursor"
 	"github.com/eiannone/keyboard"
 	"os"
 )
 
 func main() {
-	editor := go_text_editor.NewEditor()
+	editor := editor.NewEditor()
 	editor.SetFirstLineIndent(4)
 	editor.SetWidth(20)
 
