@@ -209,3 +209,11 @@ func TestTextEditor_String_FirstLineIndent(t *testing.T) {
 	editor.Write("fourfour")
 	assert.Equal(t, "four\nfour", editor.String())
 }
+
+func TestTextEditor_Paragraphs(t *testing.T) {
+	editor := NewEditor()
+	editor.Write("one paragraph\nanother\n\nand one more")
+
+	expected := []string{"one paragraph", "another", "", "and one more"}
+	assert.Equal(t, expected, editor.Paragraphs())
+}

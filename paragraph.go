@@ -210,3 +210,12 @@ func (t *TextEditor) String() string {
 
 	return sb.String()
 }
+
+func (t *TextEditor) Paragraphs() []string {
+	paragraphs := make([]string, 0, len(t.paragraphs))
+	for _, paragraph := range t.paragraphs {
+		paragraphs = append(paragraphs, paragraph.String())
+	}
+
+	return paragraphs
+}
