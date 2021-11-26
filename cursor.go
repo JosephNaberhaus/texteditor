@@ -55,7 +55,7 @@ func (t *TextEditor) Left() {
 		}
 	}
 
-	t.cursorPreferredColumn = t.CursorColumn()
+	t.setPreferredColumn()
 }
 
 func (t *TextEditor) LeftNum(n int) {
@@ -74,7 +74,7 @@ func (t *TextEditor) Right() {
 		}
 	}
 
-	t.cursorPreferredColumn = t.CursorColumn()
+	t.setPreferredColumn()
 }
 
 func (t *TextEditor) RightNum(n int) {
@@ -132,7 +132,7 @@ func (t *TextEditor) End() {
 }
 
 func (t *TextEditor) setPreferredColumn() {
-	t.cursorPreferredColumn = t.cursorPos
+	t.cursorPreferredColumn = t.CursorColumn()
 }
 
 func (t *TextEditor) minCursorPos() int {

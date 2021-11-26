@@ -41,10 +41,13 @@ func (t *TextEditor) SetFirstLineIndent(newFirstLineIndent int) {
 		return
 	}
 
+	if t.cursorParagraph == 0 {
+		t.cursorPos += newFirstLineIndent - t.firstLineIndent
+	}
+
 	t.firstLineIndent = newFirstLineIndent
-	t.cursorPos = t.minCursorPos()
-	t.cursorPreferredColumn = 0
 	t.wrappedLinesCache = nil
+	t.setPreferredColumn()
 }
 
 func (t *TextEditor) SetWidth(newWidth int) {
@@ -53,7 +56,6 @@ func (t *TextEditor) SetWidth(newWidth int) {
 	}
 
 	t.width = newWidth
-	t.cursorPos = t.minCursorPos()
-	t.cursorPreferredColumn = 0
 	t.wrappedLinesCache = nil
+	t.setPreferredColumn()
 }
