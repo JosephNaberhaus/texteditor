@@ -3,7 +3,7 @@ module github.com/JosephNaberhaus/texteditor
 go 1.22.3
 
 require (
-	github.com/rivo/uniseg v0.3.0
+	github.com/rivo/uniseg v0.4.7
 	github.com/stretchr/testify v1.9.0
 )
 
