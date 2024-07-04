@@ -10,4 +10,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run tests
-        uses: JosephNaberhaus/actions/go-test@v1.1.0
+        uses: JosephNaberhaus/actions/go-test@v1.2.0
