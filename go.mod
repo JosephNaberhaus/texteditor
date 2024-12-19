@@ -4,7 +4,7 @@ go 1.22.3
 
 require (
 	github.com/rivo/uniseg v0.4.7
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
